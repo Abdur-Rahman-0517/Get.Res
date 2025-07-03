@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic 404 | Resource Lost in Space</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap">
+    <title>Cosmic 404 | Resource Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -42,6 +42,7 @@
             box-shadow: 0 0 40px rgba(0, 200, 255, 0.2);
             position: relative;
             overflow: hidden;
+            z-index: 10;
         }
         
         .error-code {
@@ -98,18 +99,6 @@
         
         .action-button:active {
             transform: translateY(0);
-        }
-        
-        /* Astronaut animation */
-        .astronaut {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            top: 50%;
-            left: 10%;
-            animation: astronaut-float 25s infinite ease-in-out;
-            z-index: 20;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
         }
         
         /* Planet animations */
@@ -367,18 +356,56 @@
             animation-delay: 1.25s;
         }
         
+        /* Nebula */
+        .nebula {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(127, 0, 255, 0.2) 0%, transparent 70%);
+            top: 20%;
+            left: 10%;
+            opacity: 0.3;
+            z-index: 0;
+            animation: nebula-pulse 30s infinite alternate;
+            filter: blur(30px);
+        }
+        
+        .nebula-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 100, 100, 0.15) 0%, transparent 70%);
+            top: 60%;
+            left: 70%;
+        }
+        
+        /* Asteroid */
+        .asteroid {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #888;
+            border-radius: 50%;
+            z-index: 5;
+            animation: asteroid-spin 20s infinite linear;
+            box-shadow: 0 0 10px rgba(200, 200, 200, 0.5);
+        }
+        
+        .asteroid::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #666;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+        }
+        
         /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes astronaut-float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(200px, -100px) rotate(10deg); }
-            50% { transform: translate(400px, 50px) rotate(0deg); }
-            75% { transform: translate(600px, -150px) rotate(-10deg); }
-            100% { transform: translate(800px, 0) rotate(0deg); }
         }
         
         @keyframes twinkle {
@@ -430,6 +457,33 @@
             100% { width: 300px; height: 300px; opacity: 0; }
         }
         
+        @keyframes nebula-pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            100% { transform: scale(1.2); opacity: 0.4; }
+        }
+        
+        @keyframes asteroid-spin {
+            0% { 
+                transform: translate(0, 0) rotate(0deg);
+                top: 20%;
+                left: 90%;
+            }
+            25% { 
+                transform: translate(-300px, 150px) rotate(90deg);
+            }
+            50% { 
+                transform: translate(-600px, 0) rotate(180deg);
+            }
+            75% { 
+                transform: translate(-300px, -150px) rotate(270deg);
+            }
+            100% { 
+                transform: translate(0, 0) rotate(360deg);
+                top: 20%;
+                left: 90%;
+            }
+        }
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .error-code {
@@ -438,10 +492,6 @@
             
             .error-title {
                 font-size: 2rem;
-            }
-            
-            .astronaut {
-                transform: scale(0.7);
             }
             
             .planet-1, .planet-2, .planet-3 {
@@ -459,6 +509,9 @@
     <!-- Background elements -->
     <div class="galaxy"></div>
     
+    <div class="nebula"></div>
+    <div class="nebula nebula-2"></div>
+    
     <div class="planet planet-1">
         <div class="crater"></div>
         <div class="crater"></div>
@@ -473,33 +526,17 @@
     <div class="satellite"></div>
     <div class="spaceship"></div>
     <div class="comet"></div>
-    
-    <!-- Astronaut -->
-    <div class="astronaut">
-        <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="30" r="20" fill="#f0f0f0"/>
-            <rect x="40" y="50" width="20" height="40" fill="#3a6ea5"/>
-            <rect x="30" y="50" width="10" height="20" fill="#3a6ea5" rx="3"/>
-            <rect x="60" y="50" width="10" height="20" fill="#3a6ea5" rx="3"/>
-            <rect x="35" y="90" width="10" height="20" fill="#3a6ea5" rx="5" transform="rotate(10 35 90)"/>
-            <rect x="55" y="90" width="10" height="20" fill="#3a6ea5" rx="5" transform="rotate(-10 65 90)"/>
-            <circle cx="40" cy="25" r="5" fill="#333"/>
-            <circle cx="60" cy="25" r="5" fill="#333"/>
-            <path d="M45 35 Q50 40 55 35" stroke="#333" stroke-width="2" fill="none"/>
-            <circle cx="50" cy="45" r="10" fill="#ff6b6b"/>
-            <path d="M45 40 L55 40" stroke="#333" stroke-width="2"/>
-        </svg>
-    </div>
+    <div class="asteroid"></div>
     
     <!-- Main content -->
     <div class="space-container">
         <div class="error-content">
-            <h1 class="error-title">RESOURCE LOST IN SPACE</h1>
+            <h1 class="error-title">RESOURCE LOST IN THE COSMOS</h1>
             <div class="error-code">404</div>
             <p class="error-description">
-                The cosmic resource you're searching for has drifted out of orbit. 
-                It may have been swallowed by a black hole or simply floated away 
-                into the vast digital universe.
+                The digital resource you're seeking has drifted beyond the event horizon. 
+                It may have been consumed by a black hole or simply floated away 
+                into the infinite expanse of the cyber universe.
             </p>
             <button class="action-button" onclick="window.location.href='/'">RETURN TO HOME BASE</button>
         </div>
@@ -510,7 +547,7 @@
         // Create twinkling stars
         document.addEventListener('DOMContentLoaded', () => {
             const starsContainer = document.body;
-            const starsCount = 200;
+            const starsCount = 250;
             
             for (let i = 0; i < starsCount; i++) {
                 const star = document.createElement('div');
@@ -553,6 +590,28 @@
                 comet.style.animationDuration = `${duration}s`;
                 
                 starsContainer.appendChild(comet);
+            }
+            
+            // Create asteroids
+            for (let i = 0; i < 5; i++) {
+                const asteroid = document.createElement('div');
+                asteroid.classList.add('asteroid');
+                
+                // Randomize asteroid properties
+                const size = 20 + Math.random() * 40;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 20;
+                const duration = 30 + Math.random() * 30;
+                
+                asteroid.style.width = `${size}px`;
+                asteroid.style.height = `${size}px`;
+                asteroid.style.top = `${top}%`;
+                asteroid.style.left = `${left}%`;
+                asteroid.style.animationDelay = `${delay}s`;
+                asteroid.style.animationDuration = `${duration}s`;
+                
+                starsContainer.appendChild(asteroid);
             }
         });
     </script>
