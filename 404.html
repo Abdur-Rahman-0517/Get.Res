@@ -22,6 +22,12 @@
             color: #fff;
             overflow: hidden;
             position: relative;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
         
         .space-container {
@@ -43,6 +49,16 @@
             position: relative;
             overflow: hidden;
             z-index: 10;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 1s ease-out 0.5s forwards;
+        }
+        
+        @keyframes slideUp {
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
         .error-code {
@@ -90,15 +106,19 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+            transform: scale(0.95);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.95); }
+            50% { transform: scale(1); }
         }
         
         .action-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1);
             box-shadow: 0 10px 30px rgba(79, 172, 254, 0.6);
-        }
-        
-        .action-button:active {
-            transform: translateY(0);
+            animation: none;
         }
         
         /* Planet animations */
@@ -402,6 +422,37 @@
             left: 10px;
         }
         
+        /* Space Station */
+        .space-station {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 70%;
+            left: 15%;
+            z-index: 15;
+            animation: station-rotate 30s infinite linear;
+        }
+        
+        .station-ring {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 5px solid #4facfe;
+            border-radius: 50%;
+            animation: ring-spin 20s infinite linear;
+        }
+        
+        .station-core {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #aaa, #ddd);
+            border-radius: 50%;
+            top: 30px;
+            left: 30px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
         /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -484,6 +535,16 @@
             }
         }
         
+        @keyframes station-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes ring-spin {
+            0% { transform: rotateX(70deg) rotate(0deg); }
+            100% { transform: rotateX(70deg) rotate(360deg); }
+        }
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .error-code {
@@ -521,6 +582,12 @@
     <div class="planet planet-3"></div>
     
     <div class="pulsar"></div>
+    
+    <!-- Space Station -->
+    <div class="space-station">
+        <div class="station-ring"></div>
+        <div class="station-core"></div>
+    </div>
     
     <!-- Space objects -->
     <div class="satellite"></div>
