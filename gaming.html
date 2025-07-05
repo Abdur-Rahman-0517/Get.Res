@@ -3,141 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Color Sequence Memory</title>
+    <title>Color Sequence Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            color: white;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
-            overflow-x: hidden;
+            overflow: hidden;
+            position: relative;
         }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .container {
             width: 100%;
             max-width: 1200px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
         }
-        
+
         h1 {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             background: linear-gradient(to right, #ff9966, #ff5e62);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            position: relative;
+            text-shadow: 0 0 15px rgba(255, 94, 98, 0.5);
         }
-        
-        h1::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(to right, #ff9966, #ff5e62);
-            border-radius: 2px;
-        }
-        
+
         .subtitle {
             font-size: 1.2rem;
-            max-width: 600px;
-            margin: 20px auto;
             color: #e0e0ff;
-            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
             line-height: 1.6;
         }
-        
+
         .game-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            width: 100%;
-            max-width: 1200px;
+            gap: 25px;
+            height: 65vh;
         }
-        
+
         .panel {
             flex: 1;
-            min-width: 450px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
-        
-        .panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-        
+
         .panel-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 25px;
             text-align: center;
             color: #ffcc66;
-            text-shadow: 0 0 5px rgba(255, 204, 102, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
-        
-        .panel-title i {
-            font-size: 1.5rem;
-            animation: pulse 2s infinite;
-        }
-        
+
         .sequence-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 18px;
-            margin-bottom: 30px;
             flex-grow: 1;
         }
-        
+
         .color-item {
-            aspect-ratio: 1;
-            border-radius: 12px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
+            font-size: 2rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            aspect-ratio: 1;
         }
-        
+
         .color-item::after {
             content: "";
             position: absolute;
@@ -145,40 +133,33 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.4) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .color-item:hover::after {
             opacity: 1;
         }
-        
-        .color-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-        }
-        
+
         .color-item.active {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
             z-index: 10;
         }
-        
+
         .controls {
             display: flex;
-            flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
-            margin-top: auto;
-            padding-top: 20px;
+            margin-top: 25px;
         }
-        
+
         button {
             background: linear-gradient(to right, #ff9966, #ff5e62);
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 14px 32px;
             font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
@@ -187,11 +168,11 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
         }
-        
+
         button::after {
             content: "";
             position: absolute;
@@ -203,85 +184,85 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         button:hover::after {
             opacity: 1;
         }
-        
+
         button:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
-        
+
         button:active {
             transform: translateY(1px);
         }
-        
+
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
             background: linear-gradient(to right, #888, #666);
         }
-        
+
         .stats {
             display: flex;
             justify-content: space-around;
-            flex-wrap: wrap;
             gap: 20px;
             margin-top: 25px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
-        
+
         .stat-item {
             background: rgba(255, 255, 255, 0.1);
             padding: 16px;
-            border-radius: 12px;
-            min-width: 140px;
+            border-radius: 15px;
+            min-width: 120px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
         }
-        
+
         .stat-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
-        
+
         .stat-value {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #ffcc66;
             margin-top: 8px;
             text-shadow: 0 0 8px rgba(255, 204, 102, 0.4);
         }
-        
+
         .instructions {
-            margin-top: 25px;
-            padding: 22px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
             line-height: 1.7;
             flex-grow: 1;
+            margin-top: 20px;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .instructions h3 {
             color: #ffcc66;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 1.4rem;
         }
-        
+
         .instructions ul {
             padding-left: 25px;
         }
-        
+
         .instructions li {
             margin-bottom: 12px;
             position: relative;
         }
-        
+
         .instructions li::before {
             content: "•";
             color: #ff9966;
@@ -290,21 +271,22 @@
             width: 1em;
             margin-left: -1em;
         }
-        
+
         .difficulty-selector {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-bottom: 20px;
         }
-        
+
         .difficulty-btn {
-            padding: 10px 18px;
+            padding: 12px 20px;
             background: rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            min-width: 100px;
         }
-        
+
         .difficulty-btn::after {
             content: "";
             position: absolute;
@@ -316,15 +298,15 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .difficulty-btn:hover::after {
             opacity: 1;
         }
-        
+
         .difficulty-btn.active {
             background: linear-gradient(to right, #00b09b, #96c93d);
         }
-        
+
         .progress-container {
             margin: 20px 0;
             height: 12px;
@@ -333,27 +315,28 @@
             overflow: hidden;
             box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
         }
-        
+
         .progress-bar {
             height: 100%;
             background: linear-gradient(to right, #00b09b, #96c93d);
             width: 0%;
             transition: width 0.5s ease;
         }
-        
+
         .game-message {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin: 20px 0;
             min-height: 50px;
             color: #ffcc66;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             text-shadow: 0 0 8px rgba(255, 204, 102, 0.3);
+            font-weight: 500;
         }
-        
+
         .game-status {
             display: flex;
             justify-content: center;
@@ -361,16 +344,16 @@
             margin-top: 20px;
             padding: 15px;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+            border-radius: 15px;
         }
-        
+
         .status-item {
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 1.1rem;
         }
-        
+
         .status-indicator {
             width: 18px;
             height: 18px;
@@ -379,91 +362,41 @@
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-        
+
         .status-indicator.active {
             background-color: #6bcb77;
             box-shadow: 0 0 15px #6bcb77;
             transform: scale(1.2);
         }
-        
+
         .footer {
-            margin-top: 30px;
+            margin-top: 20px;
             text-align: center;
             padding: 15px;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            width: 100%;
         }
-        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @media (max-width: 1000px) {
-            .game-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .panel {
-                width: 100%;
-                min-width: auto;
-            }
-            
-            h1 {
-                font-size: 2.8rem;
-            }
-        }
-        
-        @media (max-width: 500px) {
-            .sequence-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .panel {
-                padding: 18px;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .stat-item {
-                min-width: 120px;
-                padding: 12px;
-            }
-            
-            .stat-value {
-                font-size: 1.8rem;
-            }
-        }
-        
-        /* Disabled state for player sequence */
-        .disabled .color-item {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        
-        .win-animation {
-            animation: winEffect 0.5s ease;
-        }
-        
+
         @keyframes winEffect {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(107, 203, 119, 0.8); }
             100% { transform: scale(1); }
         }
-        
-        .lose-animation {
-            animation: loseEffect 0.5s ease;
-        }
-        
+
         @keyframes loseEffect {
             0% { transform: translateX(0); }
             20% { transform: translateX(-10px); }
@@ -472,93 +405,151 @@
             80% { transform: translateX(10px); }
             100% { transform: translateX(0); }
         }
+
+        /* Disabled state for player sequence */
+        .disabled .color-item {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .win-animation {
+            animation: winEffect 0.5s ease;
+        }
+
+        .lose-animation {
+            animation: loseEffect 0.5s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1000px) {
+            .game-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .panel {
+                min-height: 45vh;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .sequence-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .difficulty-selector {
+                flex-wrap: wrap;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1><i class="fas fa-brain"></i> Color Sequence Challenge</h1>
-        <p class="subtitle">Test your memory by repeating increasingly complex color patterns! Focus and concentration are key to mastering this challenge.</p>
-    </div>
-    
-    <div class="game-container">
-        <!-- Left Panel - Target Sequence -->
-        <div class="panel">
-            <h2 class="panel-title"><i class="fas fa-eye"></i> Sequence to Remember</h2>
-            <div class="sequence-container" id="target-sequence">
-                <!-- Target sequence will be generated here -->
-            </div>
-            
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            
-            <div class="game-message" id="message">
-                <i class="fas fa-info-circle"></i> Click Start to begin!
-            </div>
-            
-            <div class="difficulty-selector">
-                <button class="difficulty-btn" data-level="easy"><i class="fas fa-baby"></i> Easy</button>
-                <button class="difficulty-btn active" data-level="medium"><i class="fas fa-user"></i> Medium</button>
-                <button class="difficulty-btn" data-level="hard"><i class="fas fa-dragon"></i> Hard</button>
-            </div>
-            
-            <div class="controls">
-                <button id="start-btn"><i class="fas fa-play"></i> Start Game</button>
-                <button id="reset-btn" disabled><i class="fas fa-redo"></i> Reset</button>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-level-up-alt"></i> Level: <div class="stat-value" id="level">1</div>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-brain"></i> COLOR SEQUENCE PRO</h1>
+            <p class="subtitle">Test your memory with this professional color sequence challenge. How far can you go?</p>
+        </div>
+        
+        <div class="game-container">
+            <!-- Left Panel - Target Sequence -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-eye"></i> MEMORIZE THIS</h2>
+                <div class="sequence-container" id="target-sequence">
+                    <!-- Target sequence will be generated here -->
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-star"></i> Score: <div class="stat-value" id="score">0</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-heart"></i> Lives: <div class="stat-value" id="lives">3</div>
+                
+                <div class="game-message" id="message">
+                    <i class="fas fa-play-circle"></i> Click START to begin!
+                </div>
+                
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn" data-level="easy"><i class="fas fa-baby"></i> Easy</button>
+                    <button class="difficulty-btn active" data-level="medium"><i class="fas fa-user"></i> Medium</button>
+                    <button class="difficulty-btn" data-level="hard"><i class="fas fa-dragon"></i> Hard</button>
+                </div>
+                
+                <div class="controls">
+                    <button id="start-btn"><i class="fas fa-play"></i> START GAME</button>
+                    <button id="reset-btn" disabled><i class="fas fa-redo"></i> RESET</button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <i class="fas fa-level-up-alt"></i> LEVEL
+                        <div class="stat-value" id="level">1</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i> SCORE
+                        <div class="stat-value" id="score">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-heart"></i> LIVES
+                        <div class="stat-value" id="lives">3</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel - Player Sequence -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-mouse-pointer"></i> YOUR TURN</h2>
+                <div class="sequence-container" id="player-sequence">
+                    <!-- Player sequence will be generated here -->
+                </div>
+                
+                <div class="game-status">
+                    <div class="status-item">
+                        <div class="status-indicator" id="indicator-memorize"></div>
+                        <span>MEMORIZE</span>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator" id="indicator-repeat"></div>
+                        <span>REPEAT</span>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-indicator" id="indicator-waiting"></div>
+                        <span>WAITING</span>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-book"></i> GAME RULES</h3>
+                    <ul>
+                        <li>Click START to begin the game</li>
+                        <li>Memorize the color sequence shown on the left</li>
+                        <li>Repeat the sequence by clicking the colors in the same order</li>
+                        <li>Each correct sequence increases your level and score</li>
+                        <li>Complete sequences to advance to higher levels</li>
+                        <li>Each wrong sequence costs one life</li>
+                        <li><strong>Pro Tip:</strong> Create mental associations to remember longer sequences</li>
+                    </ul>
                 </div>
             </div>
         </div>
         
-        <!-- Right Panel - Player Sequence & Instructions -->
-        <div class="panel">
-            <h2 class="panel-title"><i class="fas fa-mouse-pointer"></i> Your Sequence</h2>
-            <div class="sequence-container" id="player-sequence">
-                <!-- Player sequence will be generated here -->
-            </div>
-            
-            <div class="game-status">
-                <div class="status-item">
-                    <div class="status-indicator" id="indicator-memorize"></div>
-                    <span>Memorize</span>
-                </div>
-                <div class="status-item">
-                    <div class="status-indicator" id="indicator-repeat"></div>
-                    <span>Repeat</span>
-                </div>
-                <div class="status-item">
-                    <div class="status-indicator" id="indicator-waiting"></div>
-                    <span>Waiting</span>
-                </div>
-            </div>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-book-open"></i> How to Play:</h3>
-                <ul>
-                    <li>Click <strong>START</strong> to begin the game</li>
-                    <li>Memorize the pattern of colors shown in the left panel</li>
-                    <li>Repeat the pattern by clicking the colors in the same order in this panel</li>
-                    <li>Complete sequences to advance to higher levels</li>
-                    <li>Each level adds more colors to the sequence</li>
-                    <li>Get 3 wrong sequences and the game is over!</li>
-                    <li><strong>Pro Tip:</strong> Create a mental story or pattern to remember the sequence</li>
-                </ul>
-            </div>
+        <div class="footer">
+            <p>COLOR SEQUENCE PRO • MEMORY CHALLENGE • TEST YOUR BRAIN POWER</p>
         </div>
-    </div>
-
-    <div class="footer">
-        <p>Designed with ❤️ | Color Sequence Challenge © 2023 | Test your memory skills!</p>
     </div>
 
     <script>
@@ -675,7 +666,7 @@
                 
                 startBtn.disabled = false;
                 resetBtn.disabled = true;
-                messageEl.innerHTML = '<i class="fas fa-info-circle"></i> Click Start to begin!';
+                messageEl.innerHTML = '<i class="fas fa-play-circle"></i> Click START to begin!';
                 progressBar.style.width = "0%";
                 
                 // Reset all color items
@@ -842,8 +833,7 @@
                 gameState.isPlaying = false;
                 messageEl.innerHTML = `<i class="fas fa-gamepad"></i> Game Over! Final Score: ${gameState.score}`;
                 startBtn.disabled = false;
-                startBtn.textContent = "Play Again";
-                startBtn.innerHTML = '<i class="fas fa-redo"></i> Play Again';
+                startBtn.innerHTML = '<i class="fas fa-redo"></i> PLAY AGAIN';
                 updateIndicators('waiting');
             }
             
