@@ -13,36 +13,20 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #0f0f3a);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
             color: white;
-            position: relative;
-        }
-        
-        #stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
         }
         
         .game-container {
             position: relative;
             width: 800px;
             height: 600px;
-            background: #0a0a1a;
+            background: #000022;
             border: 3px solid #4facfe;
             border-radius: 10px;
             overflow: hidden;
@@ -64,6 +48,7 @@
             justify-content: space-between;
             background: rgba(0, 20, 40, 0.7);
             border-bottom: 1px solid #00c8ff;
+            z-index: 10;
         }
         
         .ui-panel {
@@ -110,8 +95,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 20, 40, 0.9);
-            z-index: 10;
+            background: rgba(0, 10, 30, 0.95);
+            z-index: 20;
             text-align: center;
             padding: 30px;
         }
@@ -225,6 +210,15 @@
             text-shadow: 0 0 10px #00c8ff;
         }
         
+        .level-complete {
+            background: rgba(0, 40, 85, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ffaa;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        
         @keyframes glow {
             from {
                 text-shadow: 0 0 10px #00c8ff, 0 0 20px #008cff;
@@ -232,6 +226,12 @@
             to {
                 text-shadow: 0 0 20px #00c8ff, 0 0 40px #008cff, 0 0 60px #0062ff;
             }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 170, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 170, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(0, 255, 170, 0.5); }
         }
         
         @media (max-width: 850px) {
@@ -248,8 +248,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="stars"></div>
-    
     <div class="game-container">
         <div class="ui-overlay">
             <div class="ui-panel">
@@ -320,6 +318,18 @@
             </div>
         </div>
         
+        <div id="levelCompleteScreen" class="screen hidden">
+            <h2>LEVEL COMPLETE!</h2>
+            <div class="level-complete">
+                <p class="description">You have successfully defended this sector!</p>
+                <p class="description">Prepare for the next wave...</p>
+            </div>
+            <div class="stat-value" style="font-size: 2rem; margin: 20px 0;">
+                SCORE: <span id="levelScore">0</span>
+            </div>
+            <button id="nextLevelButton">CONTINUE MISSION</button>
+        </div>
+        
         <div id="gameOverScreen" class="screen hidden">
             <h2>MISSION FAILED</h2>
             <p class="description">The Zylathian fleet has overwhelmed our defenses. Your sacrifice will be remembered.</p>
@@ -333,8 +343,10 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const startScreen = document.getElementById('startScreen');
+        const levelCompleteScreen = document.getElementById('levelCompleteScreen');
         const gameOverScreen = document.getElementById('gameOverScreen');
         const startButton = document.getElementById('startButton');
+        const nextLevelButton = document.getElementById('nextLevelButton');
         const restartButton = document.getElementById('restartButton');
         const scoreValue = document.getElementById('scoreValue');
         const levelValue = document.getElementById('levelValue');
@@ -343,6 +355,7 @@
         const healthBar = document.getElementById('healthBar');
         const shieldBar = document.getElementById('shieldBar');
         const finalScore = document.getElementById('finalScore');
+        const levelScore = document.getElementById('levelScore');
         
         let gameRunning = false;
         let gamePaused = false;
@@ -351,6 +364,9 @@
         let health = 100;
         let shield = 100;
         let animationId;
+        let levelScoreGoal = 1000;
+        let enemiesDefeated = 0;
+        let stars = [];
         
         // Player spaceship
         const player = {
@@ -372,7 +388,6 @@
         let enemyBullets = [];
         let powerups = [];
         let explosions = [];
-        let stars = [];
         
         // Enemy types
         const enemyTypes = [
@@ -390,28 +405,6 @@
         
         // Create stars for background
         function createStars() {
-            const starsContainer = document.getElementById('stars');
-            starsContainer.innerHTML = '';
-            
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                
-                // Random position and size
-                const size = Math.random() * 3;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                
-                // Twinkle animation
-                star.style.opacity = Math.random();
-                star.style.animation = `twinkle ${2 + Math.random() * 5}s infinite alternate`;
-                
-                starsContainer.appendChild(star);
-            }
-            
-            // Canvas stars for parallax effect
             stars = [];
             for (let i = 0; i < 100; i++) {
                 stars.push({
@@ -436,6 +429,8 @@
             player.weaponLevel = 1;
             player.shieldActive = false;
             player.shieldEnergy = 100;
+            levelScoreGoal = 1000;
+            enemiesDefeated = 0;
             
             playerBullets = [];
             enemyShips = [];
@@ -446,11 +441,37 @@
             updateStats();
             startScreen.classList.add('hidden');
             gameOverScreen.classList.add('hidden');
+            levelCompleteScreen.classList.add('hidden');
             
             // Start game loop
             if (animationId) {
                 cancelAnimationFrame(animationId);
             }
+            gameLoop();
+        }
+        
+        // Start next level
+        function startNextLevel() {
+            level++;
+            levelScoreGoal = level * 1500;
+            enemiesDefeated = 0;
+            
+            playerBullets = [];
+            enemyShips = [];
+            enemyBullets = [];
+            powerups = [];
+            explosions = [];
+            
+            // Reset player position
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 100;
+            
+            // Heal player a bit
+            health = Math.min(100, health + 30);
+            shield = Math.min(100, shield + 50);
+            
+            updateStats();
+            levelCompleteScreen.classList.add('hidden');
             gameLoop();
         }
         
@@ -553,6 +574,24 @@
                 case 'Q':
                     if (shield > 10 && !player.shieldActive) {
                         player.shieldActive = true;
+                    }
+                    break;
+                case 'e':
+                case 'E':
+                    // EMP blast
+                    if (score >= 500) {
+                        createExplosion(player.x + player.width/2, player.y, 100);
+                        enemyShips.forEach(enemy => {
+                            if (Math.abs(enemy.x - player.x) < 300 && Math.abs(enemy.y - player.y) < 300) {
+                                enemy.health -= 50;
+                                if (enemy.health <= 0) {
+                                    createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 30);
+                                    score += enemyTypes[enemy.type].score;
+                                    enemiesDefeated++;
+                                }
+                            }
+                        });
+                        score -= 500;
                     }
                     break;
             }
@@ -739,6 +778,13 @@
                 ctx.arc(0, 0, powerup.radius * 0.6, 0, Math.PI * 2);
                 ctx.fill();
                 
+                // Pulse effect
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, powerup.radius * 1.5, 0, Math.PI * 2);
+                ctx.stroke();
+                
                 ctx.restore();
             });
         }
@@ -866,10 +912,9 @@
                 createEnemy();
             }
             
-            // Level progression
-            if (score > level * 1000) {
-                level++;
-                createExplosion(canvas.width / 2, 100, 30);
+            // Check level completion
+            if (score >= levelScoreGoal) {
+                levelComplete();
             }
         }
         
@@ -892,6 +937,7 @@
                             // Enemy destroyed
                             createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 20);
                             score += enemyTypes[enemy.type].score;
+                            enemiesDefeated++;
                             
                             // Chance to drop powerup
                             if (Math.random() < 0.3) {
@@ -977,6 +1023,13 @@
             });
         }
         
+        // Level complete
+        function levelComplete() {
+            gameRunning = false;
+            levelScore.textContent = score;
+            levelCompleteScreen.classList.remove('hidden');
+        }
+        
         // Game over
         function gameOver() {
             gameRunning = false;
@@ -1009,6 +1062,21 @@
             // Draw shield energy
             ctx.fillText(`SHIELD ENERGY: ${Math.floor(player.shieldEnergy)}%`, 20, canvas.height - 10);
             
+            // Draw level progress
+            ctx.fillStyle = '#4facfe';
+            ctx.fillRect(canvas.width/2 - 150, 20, 300, 20);
+            ctx.fillStyle = '#00f2fe';
+            const progressWidth = 300 * (score / levelScoreGoal);
+            ctx.fillRect(canvas.width/2 - 150, 20, progressWidth, 20);
+            ctx.strokeStyle = '#00c8ff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(canvas.width/2 - 150, 20, 300, 20);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText(`LEVEL ${level} PROGRESS: ${Math.min(100, Math.floor((score / levelScoreGoal) * 100))}%`, canvas.width/2, 37);
+            
             // Draw pause indicator
             if (gamePaused) {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -1033,6 +1101,7 @@
         
         // Event listeners
         startButton.addEventListener('click', initGame);
+        nextLevelButton.addEventListener('click', startNextLevel);
         restartButton.addEventListener('click', initGame);
         
         // Initialize stars and game
