@@ -40,5 +40,5 @@ javascript:(function(){
         cancelable: true
     }));
 
-    console.log("Perfect circle drawn! Should be 100% now.");
+    console.log("Perfect circle drawn! Should be 99.9% now.");
 })();
