@@ -1,70 +1,65 @@
-// ===== 2048 FULL HACK ===== //
-// Run this in the browser console (F12)
+// ===== 2048 ULTIMATE HACK ===== //
+// Works even on obfuscated versions
 
-// 1. Override the game's move function to always place a 2048 tile
-var originalMove = GameManager.prototype.move;
-GameManager.prototype.move = function (direction) {
-  originalMove.call(this, direction);
-  this.grid.cells.forEach((row) => {
-    row.forEach((cell) => {
-      if (cell) {
-        cell.value = 2048; // All tiles become 2048
-      }
+// 1. Find the game manager (works on most 2048 clones)
+function getGameManager() {
+  const manager = Object.values(document.querySelector("body").children)
+    .find(e => e.hasOwnProperty("move") || e.hasOwnProperty("grid"));
+  if (!manager) throw new Error("GameManager not found. Try another 2048 site.");
+  return manager;
+}
+
+// 2. Force all tiles to become 2048
+function setAllTilesTo2048() {
+  const gm = getGameManager();
+  gm.grid.cells.forEach(row => {
+    row.forEach(cell => {
+      if (cell) cell.value = 2048;
     });
   });
-  this.updateView();
-};
+  gm.actuate();
+  console.log("✅ All tiles set to 2048!");
+}
 
-// 2. Force a win instantly
+// 3. Instantly win the game
 function forceWin() {
-  if (window.GameManager) {
-    const manager = new GameManager(4, KeyboardInputManager, HTMLActuator);
-    manager.won = true;
-    manager.keepPlaying = true;
-    manager.actuate();
-    console.log("🎉 You won! (forced)");
-  } else {
-    console.error("GameManager not found. Is this 2048?");
-  }
+  const gm = getGameManager();
+  gm.won = true;
+  gm.keepPlaying = true;
+  gm.actuate();
+  console.log("🎉 You won! (forced)");
 }
 
-// 3. Set custom board (replace numbers as desired)
-function setCustomBoard(board) {
-  const manager = new GameManager(4, KeyboardInputManager, HTMLActuator);
-  manager.grid = new Grid(4);
-  manager.grid.cells = board.map(row => row.map(val => val ? new Tile({ x: 0, y: 0 }, val) : null));
-  manager.actuate();
-  console.log("✅ Custom board set!");
+// 4. Set custom score
+function setScore(score) {
+  const gm = getGameManager();
+  gm.score = score;
+  gm.actuate();
+  console.log(`🏆 Score set to ${score}!`);
 }
 
-// 4. Add infinite moves (no more 'Game Over')
-GameManager.prototype.isGameTerminated = function () {
-  return false;
-};
+// 5. Disable game over (infinite moves)
+function disableGameOver() {
+  const gm = getGameManager();
+  gm.isGameTerminated = () => false;
+  console.log("♾️ Game Over disabled!");
+}
 
-// 5. Spawn a specific tile (x, y, value)
+// 6. Spawn a specific tile (x, y, value)
 function spawnTile(x, y, value) {
-  const manager = new GameManager(4, KeyboardInputManager, HTMLActuator);
-  const tile = new Tile({ x, y }, value);
-  manager.grid.insertTile(tile);
-  manager.actuate();
+  const gm = getGameManager();
+  const tile = { position: { x, y }, value };
+  gm.grid.insertTile(tile);
+  gm.actuate();
   console.log(`🔄 Spawned ${value} at (${x}, ${y})`);
 }
 
-// 6. Set your score to any value
-function setScore(score) {
-  if (window.GameManager) {
-    const manager = new GameManager(4, KeyboardInputManager, HTMLActuator);
-    manager.score = score;
-    manager.actuate();
-    console.log(`🏆 Score set to ${score}!`);
-  }
-}
-
-// ==== USAGE EXAMPLES ==== //
-// forceWin(); // Instantly win the game
+// ==== RUN HACKS ==== //
+// Uncomment the hacks you want:
+// setAllTilesTo2048(); // Every tile becomes 2048
+// forceWin(); // Instantly win
 // setScore(999999); // Set high score
-// spawnTile(0, 0, 2048); // Spawn 2048 at top-left
-// setCustomBoard([[2048, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]); // Custom board
+// disableGameOver(); // Never lose
+// spawnTile(0, 0, 4096); // Spawn 4096 at top-left
 
-console.log("🔥 2048 HACK LOADED! Use forceWin(), setScore(), etc.");
+console.log("🚀 2048 HACKS LOADED! Run commands like forceWin(), setScore(), etc.");
