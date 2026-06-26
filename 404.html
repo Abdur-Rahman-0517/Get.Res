@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #0f0c29);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Space Mono', monospace;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .space-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            padding: 2rem;
+            z-index: 100;
+        }
+        
+        .error-content {
+            background: rgba(10, 15, 30, 0.7);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 40px rgba(0, 200, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 1s ease-out 0.5s forwards;
+        }
+        
+        @keyframes slideUp {
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .error-code {
+            font-size: 10rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 1rem 0;
+            text-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #4facfe;
+        }
+        
+        .error-description {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+            color: #a0d2ff;
+        }
+        
+        .action-button {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: #0a0f1e;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+            transform: scale(0.95);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.95); }
+            50% { transform: scale(1); }
+        }
+        
+        .action-button:hover {
+            transform: translateY(-5px) scale(1);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.6);
+            animation: none;
+        }
+        
+        /* Planet animations */
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .planet-1 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle at 30% 30%, #ff7e5f, #feb47b);
+            top: 10%;
+            left: 5%;
+            box-shadow: 0 0 50px rgba(255, 126, 95, 0.6);
+            animation: float 12s infinite ease-in-out;
+        }
+        
+        .planet-1::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 20px;
+            background: rgba(254, 180, 123, 0.4);
+            border-radius: 50%;
+            top: 50%;
+            left: -25px;
+            transform: rotate(-20deg);
+            box-shadow: 0 0 20px rgba(254, 180, 123, 0.6);
+            animation: ring-rotate 20s infinite linear;
+        }
+        
+        .planet-2 {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+            bottom: 15%;
+            right: 8%;
+            box-shadow: 0 0 50px rgba(79, 172, 254, 0.6);
+            animation: float 8s infinite ease-in-out;
+            animation-delay: 1s;
+        }
+        
+        .planet-3 {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #7f00ff, #e100ff);
+            top: 25%;
+            right: 15%;
+            box-shadow: 0 0 30px rgba(127, 0, 255, 0.6);
+            animation: float 10s infinite ease-in-out;
+            animation-delay: 2s;
+        }
+        
+        .crater {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+        }
+        
+        .planet-1 .crater:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            top: 60px;
+            left: 80px;
+        }
+        
+        .planet-1 .crater:nth-child(2) {
+            width: 30px;
+            height: 30px;
+            top: 150px;
+            left: 50px;
+        }
+        
+        .planet-1 .crater:nth-child(3) {
+            width: 25px;
+            height: 25px;
+            top: 100px;
+            left: 160px;
+        }
+        
+        /* Satellite */
+        .satellite {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            z-index: 15;
+            animation: satellite-orbit 40s infinite linear;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+        }
+        
+        .satellite::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #aaa, #ddd);
+            border-radius: 50%;
+            top: -10px;
+            left: -15px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        .satellite::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 8px;
+            background: #555;
+            top: 5px;
+            right: -80px;
+            border-radius: 4px;
+        }
+        
+        /* Spaceship */
+        .spaceship {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border-radius: 10px 50px 50px 10px;
+            z-index: 15;
+            animation: spaceship-fly 35s infinite linear;
+            top: 30%;
+            left: 10%;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.7));
+        }
+        
+        .spaceship::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #4facfe;
+            border-radius: 50%;
+            top: 5px;
+            left: -15px;
+        }
+        
+        .spaceship::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            top: 12px;
+            right: 10px;
+            animation: engine-pulse 1s infinite alternate;
+        }
+        
+        /* Comet */
+        .comet {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 5;
+            animation: comet-trail 15s infinite linear;
+            top: 15%;
+            left: 100%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .comet::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(100,200,255,0.8));
+            top: 2.5px;
+            left: -100px;
+            border-radius: 5px;
+        }
+        
+        /* Galaxy */
+        .galaxy {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(127, 0, 255, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(30deg);
+            opacity: 0.5;
+            z-index: 0;
+            animation: galaxy-spin 120s infinite linear;
+        }
+        
+        .galaxy::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(100, 200, 255, 0.05) 100%);
+            border-radius: 50%;
+            transform: rotate(60deg);
+        }
+        
+        .galaxy::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(255, 100, 200, 0.05) 100%);
+            border-radius: 50%;
+            transform: rotate(120deg);
+        }
+        
+        /* Stars */
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+            opacity: var(--opacity, 0.8);
+        }
+        
+        /* Pulsar */
+        .pulsar {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 80%;
+            left: 20%;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: pulsar-beam 5s infinite;
+        }
+        
+        .pulsar::before,
+        .pulsar::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulsar-expand 5s infinite;
+        }
+        
+        .pulsar::after {
+            animation-delay: 1.25s;
+        }
+        
+        /* Nebula */
+        .nebula {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(127, 0, 255, 0.2) 0%, transparent 70%);
+            top: 20%;
+            left: 10%;
+            opacity: 0.3;
+            z-index: 0;
+            animation: nebula-pulse 30s infinite alternate;
+            filter: blur(30px);
+        }
+        
+        .nebula-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 100, 100, 0.15) 0%, transparent 70%);
+            top: 60%;
+            left: 70%;
+        }
+        
+        /* Asteroid */
+        .asteroid {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #888;
+            border-radius: 50%;
+            z-index: 5;
+            animation: asteroid-spin 20s infinite linear;
+            box-shadow: 0 0 10px rgba(200, 200, 200, 0.5);
+        }
+        
+        .asteroid::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #666;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+        }
+        
+        /* Space Station */
+        .space-station {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 70%;
+            left: 15%;
+            z-index: 15;
+            animation: station-rotate 30s infinite linear;
+        }
+        
+        .station-ring {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 5px solid #4facfe;
+            border-radius: 50%;
+            animation: ring-spin 20s infinite linear;
+        }
+        
+        .station-core {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #aaa, #ddd);
+            border-radius: 50%;
+            top: 30px;
+            left: 30px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: var(--opacity, 0.8); }
+            50% { opacity: 0.2; }
+        }
+        
+        @keyframes satellite-orbit {
+            0% { transform: rotate(0deg) translateX(300px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
+        }
+        
+        @keyframes spaceship-fly {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(300px, 150px) rotate(5deg); }
+            50% { transform: translate(600px, -100px) rotate(0deg); }
+            75% { transform: translate(300px, -200px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        @keyframes comet-trail {
+            0% { transform: translate(0, 0); opacity: 0; }
+            1% { opacity: 1; }
+            100% { transform: translate(-2000px, 300px); opacity: 0; }
+        }
+        
+        @keyframes galaxy-spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        @keyframes ring-rotate {
+            0% { transform: rotate(-20deg); }
+            100% { transform: rotate(340deg); }
+        }
+        
+        @keyframes engine-pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes pulsar-beam {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes pulsar-expand {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 300px; height: 300px; opacity: 0; }
+        }
+        
+        @keyframes nebula-pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            100% { transform: scale(1.2); opacity: 0.4; }
+        }
+        
+        @keyframes asteroid-spin {
+            0% { 
+                transform: translate(0, 0) rotate(0deg);
+                top: 20%;
+                left: 90%;
+            }
+            25% { 
+                transform: translate(-300px, 150px) rotate(90deg);
+            }
+            50% { 
+                transform: translate(-600px, 0) rotate(180deg);
+            }
+            75% { 
+                transform: translate(-300px, -150px) rotate(270deg);
+            }
+            100% { 
+                transform: translate(0, 0) rotate(360deg);
+                top: 20%;
+                left: 90%;
+            }
+        }
+        
+        @keyframes station-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes ring-spin {
+            0% { transform: rotateX(70deg) rotate(0deg); }
+            100% { transform: rotateX(70deg) rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 8rem;
+            }
+            
+            .error-title {
+                font-size: 2rem;
+            }
+            
+            .planet-1, .planet-2, .planet-3 {
+                transform: scale(0.8);
+            }
+            
+            .galaxy {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background elements -->
+    <div class="galaxy"></div>
+    
+    <div class="nebula"></div>
+    <div class="nebula nebula-2"></div>
+    
+    <div class="planet planet-1">
+        <div class="crater"></div>
+        <div class="crater"></div>
+        <div class="crater"></div>
+    </div>
+    <div class="planet planet-2"></div>
+    <div class="planet planet-3"></div>
+    
+    <div class="pulsar"></div>
+    
+    <!-- Space Station -->
+    <div class="space-station">
+        <div class="station-ring"></div>
+        <div class="station-core"></div>
+    </div>
+    
+    <!-- Space objects -->
+    <div class="satellite"></div>
+    <div class="spaceship"></div>
+    <div class="comet"></div>
+    <div class="asteroid"></div>
+    
+    <!-- Main content -->
+    <div class="space-container">
+        <div class="error-content">
+            <h1 class="error-title">RESOURCE LOST IN THE SPACE</h1>
+            <div class="error-code">404</div>
+            <p class="error-description">
+                The resource you're seeking has drifted beyond the event horizon. 
+                It may have been consumed by a black hole or simply floated away 
+                into the infinite expanse of the cyber universe.
+            </p>
+            <button class="action-button" onclick="window.location.href='/'">RETURN TO HOME BASE</button>
+        </div>
+    </div>
+    
+    <!-- Dynamic stars background -->
+    <script>
+        // Create twinkling stars
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsContainer = document.body;
+            const starsCount = 250;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Randomize star properties
+                const size = Math.random() * 3;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const opacity = 0.2 + Math.random() * 0.8;
+                const duration = 3 + Math.random() * 5;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+                star.style.opacity = opacity;
+                star.style.setProperty('--opacity', opacity);
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                starsContainer.appendChild(star);
+            }
+            
+            // Create additional comets
+            for (let i = 0; i < 3; i++) {
+                const comet = document.createElement('div');
+                comet.classList.add('comet');
+                
+                // Randomize comet properties
+                const size = 5 + Math.random() * 5;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = 10 + Math.random() * 10;
+                
+                comet.style.width = `${size}px`;
+                comet.style.height = `${size}px`;
+                comet.style.top = `${top}%`;
+                comet.style.animationDelay = `${delay}s`;
+                comet.style.animationDuration = `${duration}s`;
+                
+                starsContainer.appendChild(comet);
+            }
+            
+            // Create asteroids
+            for (let i = 0; i < 5; i++) {
+                const asteroid = document.createElement('div');
+                asteroid.classList.add('asteroid');
+                
+                // Randomize asteroid properties
+                const size = 20 + Math.random() * 40;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 20;
+                const duration = 30 + Math.random() * 30;
+                
+                asteroid.style.width = `${size}px`;
+                asteroid.style.height = `${size}px`;
+                asteroid.style.top = `${top}%`;
+                asteroid.style.left = `${left}%`;
+                asteroid.style.animationDelay = `${delay}s`;
+                asteroid.style.animationDuration = `${duration}s`;
+                
+                starsContainer.appendChild(asteroid);
+            }
+        });
+    </script>
+</body>
+</html>
