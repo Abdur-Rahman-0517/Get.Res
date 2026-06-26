@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Tic Tac Toe",
+    "type": "game",
+    "about": "A fun classic game with a bot that never loses.",
+    "link": "Games/Tic-Tac-Toe"
+  },
+  {
+    "name": "Target Frenzy",
+    "type": "game",
+    "about": "Test your reflexes by hitting fast-moving targets.",
+    "link": "Games/Target-Frenzy"
+  },
+  {
+    "name": "The Snake Game",
+    "type": "game",
+    "about": "A simple snake game for you.",
+    "link": "Games/The-Snake-Game"
+  },
+  {
+    "name": "The Memory Game",
+    "type": "game",
+    "about": "Improve your memory by matching pairs of cards!",
+    "link": "Games/The-Memory-Game"
+  },
+  {
+    "name": "FreqLens",
+    "type": "tool",
+    "about": "A powerful frequency analysis tool.",
+    "link": "Tools/FreqLens"
+  },
+  {
+    "name": "Color Picker",
+    "type": "image-tool",
+    "about": "Pick colors from images with ease.",
+    "link": "tools/image-tools/Color-Picker"
+  },
+  {
+    "name": "Pixel Resizer",
+    "type": "image-tool",
+    "about": "Resize images by pixel dimensions.",
+    "link": "tools/image-tools/Pixel-Resizer"
+  }
+]
